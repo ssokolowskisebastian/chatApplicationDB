@@ -1,5 +1,7 @@
 import java.io.*;
 import java.net.Socket;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class UserHandler extends Thread {
@@ -7,6 +9,12 @@ public class UserHandler extends Thread {
 
     UserConnection userConnection=new UserConnection();
     UserListWindow userListWindow=new UserListWindow();
+    InsertUserToDB insertUserToDB=new InsertUserToDB();
+    //SendDataToDB sendDataToDB=new SendDataToDB();
+
+    //PreparedStatement pst=sendDataToDB.getPreparedStatement();
+
+
     OutputStream os;
     String thisUserLogin;
 
@@ -70,10 +78,14 @@ public class UserHandler extends Thread {
             ApplicationState.getInstance().getUsers().add(u);
             String msg=" added\n";
             msgTerm(msg,login,os);
+            insertUserToDB.insertUser(login, password);
+
+
         }else{
             String msg=" exist\n";
             msgTerm(msg,login,os);
         }
+
     }
 
     private void handleUserLogin(String login, String password, OutputStream os) throws IOException {
