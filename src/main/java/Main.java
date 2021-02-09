@@ -1,14 +1,17 @@
-import javax.swing.*;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.SQLException;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, SQLException {
+
         ServerSocket ss= new ServerSocket(8818);
         UserListWindow userListWindow=new UserListWindow();
-        SendDataToDB sendDataToDB=new SendDataToDB();
+        DatabaseConnector databaseConnector=new DatabaseConnector();
+        DatabaseOpeations databaseOpeations=new DatabaseOpeations();
+        databaseOpeations.readUser();
+
 
 
         while(true){

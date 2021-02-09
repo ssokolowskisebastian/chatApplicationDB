@@ -1,26 +1,22 @@
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.Statement;
 
 
-public class SendDataToDB {
-    private String sql = "CREATE TABLE ChatUsers2 " +
-                "(id int NOT NULL AUTO_INCREMENT, " +
-            " login VARCHAR(255), " +
-            " password VARCHAR(255), " +
-            " PRIMARY KEY ( id ))";
+public class DatabaseConnector {
 
     private PreparedStatement preparedStatement;
 
-
-
+    private Statement st;
 
     public PreparedStatement getPreparedStatement() {
         return preparedStatement;
     }
 
-
-
+    public Statement getStatement() {
+        return st;
+    }
 
     public  Connection getConnection() {
         try {
@@ -31,6 +27,7 @@ public class SendDataToDB {
             Class.forName(driver);
 
             Connection conn = DriverManager.getConnection(url, username, password);
+
             System.out.println("Connected");
             return conn;
         } catch (Exception e) {

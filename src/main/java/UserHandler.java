@@ -1,25 +1,18 @@
 import java.io.*;
 import java.net.Socket;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.ArrayList;
 
 public class UserHandler extends Thread {
 
 
     UserConnection userConnection=new UserConnection();
+
     UserListWindow userListWindow=new UserListWindow();
-    InsertUserToDB insertUserToDB=new InsertUserToDB();
-    //SendDataToDB sendDataToDB=new SendDataToDB();
 
-    //PreparedStatement pst=sendDataToDB.getPreparedStatement();
-
+    DatabaseOpeations insertToDatabase=new DatabaseOpeations();
 
     OutputStream os;
+
     String thisUserLogin;
-
-
-
 
     @Override
     public void run() {
@@ -47,9 +40,13 @@ public class UserHandler extends Thread {
             String[] tokens = line.split(" ", 3);
             String cmd = tokens[0];
             String login = tokens[1];
-            String password = tokens[2];
             String sendTo = tokens[1];
-            String msg = tokens[2];
+            String password=null;
+            String msg = null;
+            if(tokens.length>2) {
+                password = tokens[2];
+                msg = tokens[2];
+            }
 
             if (cmd.equals("msg")) {
                 handleMessage(sendTo, msg, os);
@@ -57,7 +54,11 @@ public class UserHandler extends Thread {
                 handleNewUser(login, password, os);
             } else if (cmd.equals("login")) {
                 handleUserLogin(login, password, os);
-            } else {
+            } else if (cmd.equals("logoff")) {
+                handleUserLogOff(login, os);
+            }else if (cmd.equals("remove")) {
+                handleRemoveUser(login, password,os);
+            }else {
                 s.close();
             }
             userListWindow.updateUsersView(ApplicationState.getInstance().getUsers());
@@ -78,7 +79,9 @@ public class UserHandler extends Thread {
             ApplicationState.getInstance().getUsers().add(u);
             String msg=" added\n";
             msgTerm(msg,login,os);
-            insertUserToDB.insertUser(login, password);
+
+            insertToDatabase.insertNewUser(login,
+                    insertToDatabase.getPassEncrypting().passEncrypting(password));
 
 
         }else{
@@ -103,12 +106,41 @@ public class UserHandler extends Thread {
             //ApplicationState.getInstance().getUserHandlerList().clear();
             ApplicationState.getInstance().getUserList().add(thisUser);
 
+
         }else{
             String msg=" wrong credentials\n";
             msgTerm(msg, login,os);
         }
 
 
+    }
+    private void handleUserLogOff(String login, OutputStream os) throws IOException {
+        UserConnection userConnection =ApplicationState.getInstance().getUserLogin(login);
+        if(userConnection ==null ){
+            String msg=" not exist\n";
+            msgTerm(msg,login,os);
+
+        }else if(login.equals(userConnection.getLogin())){
+            userConnection.setOnline(false);
+            String msg="logoff successfully";
+            msgTerm(msg, login, os);
+        }else if(!userConnection.isOnline()){
+            String msg="not online";
+            msgTerm(msg, login, os);
+        }
+
+    }
+    private void handleRemoveUser(String login, String password, OutputStream os) throws IOException {
+        UserConnection userConnection =ApplicationState.getInstance().getUserLogin(login);
+        if(userConnection.getLogin().equals(login)&& userConnection.getPassword().equals(password)){
+            ApplicationState.getInstance().getUserList().remove(userConnection);
+            String msg=" removed\n";
+            msgTerm(msg,login,os);
+            insertToDatabase.removeUser(login);
+        }else{
+            String msg=" not exists\n";
+            msgTerm(msg,login,os);
+        }
     }
 
 
@@ -124,6 +156,7 @@ public class UserHandler extends Thread {
         }else{
             String message=" send: "+msg+"\n";
             msgTerm(message,thisUserLogin,os);
+            insertToDatabase.insertMessage(thisUserLogin,sendTo,msg);
         }
 
 
