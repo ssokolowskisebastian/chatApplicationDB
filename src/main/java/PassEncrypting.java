@@ -1,24 +1,22 @@
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 public class PassEncrypting {
 
+    String encryptedPass=null;
+
     public String passEncrypting(String pass) {
-        char[] chars = pass.toCharArray();
-        String passEncrypted = new String();
+        try{
+            MessageDigest messageDigest = MessageDigest.getInstance("MD5");
+            messageDigest.update(pass.getBytes(), 0, pass.length());
+            encryptedPass = new BigInteger(messageDigest.digest()).toString();
 
-        for (char c : chars) {
-            c += 15;
-            passEncrypted+=c;
+        }catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
         }
-        return passEncrypted;
+        return encryptedPass;
     }
 
-    public String passDecrypting(String pass) {
-        char[] chars = pass.toCharArray();
-        String passDecrypted = new String();
 
-        for (char c : chars) {
-            c -= 15;
-            passDecrypted+=c;
-        }
-        return passDecrypted;
-    }
 }

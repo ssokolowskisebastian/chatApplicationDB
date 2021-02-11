@@ -8,7 +8,7 @@ public class UserConnection {
 
     private OutputStream outputStream;
 
-    private boolean online=false;
+    private boolean online = false;
 
     public String getLogin() {
         return login;

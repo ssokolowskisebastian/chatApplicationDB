@@ -6,12 +6,8 @@ import java.util.ArrayList;
 
 public class UserListWindow implements MouseListener {
 
-
-
-
-
     public UserListWindow() {
-        JFrame jUsersListFrame= new JFrame("User list");
+        JFrame jUsersListFrame = new JFrame("User list");
 
 
         jUsersListFrame.getContentPane().setBackground(new Color(222,111,111));
@@ -59,14 +55,11 @@ public class UserListWindow implements MouseListener {
     }
 
 
-
-
-
     @Override
     public void mouseClicked(MouseEvent e) {
 
         UserConnection user = ApplicationState.getInstance().getUserLogin(userJListOnline.getSelectedValue());
-       UserConnection myself = ApplicationState.getInstance().getUserList().get(0);// TODO
+       UserConnection myself = ApplicationState.getInstance().getUserList().get(0);
 
         ApplicationState.getInstance().getMessageWindowProvider().getMessageWindow(myself, user.getLogin());
 

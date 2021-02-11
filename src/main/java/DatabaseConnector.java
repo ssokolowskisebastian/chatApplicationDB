@@ -6,34 +6,30 @@ import java.sql.Statement;
 
 public class DatabaseConnector {
 
-    private PreparedStatement preparedStatement;
+    private static final String DRIVER = "com.mysql.cj.jdbc.Driver";
+    private static final String URL = "jdbc:mysql://localhost:3306/chat";
+    private static final String USERNAME = "root";
+    private static final String PASSWORD = "root";
 
-    private Statement st;
+    private PreparedStatement preparedStatement;
 
     public PreparedStatement getPreparedStatement() {
         return preparedStatement;
     }
 
-    public Statement getStatement() {
-        return st;
-    }
 
     public  Connection getConnection() {
         try {
-            String driver = "com.mysql.cj.jdbc.Driver";
-            String url = "jdbc:mysql://localhost:3306/chat";
-            String username = "root";
-            String password = "root";
-            Class.forName(driver);
 
-            Connection conn = DriverManager.getConnection(url, username, password);
+            Class.forName(DRIVER);
+
+            Connection conn = DriverManager.getConnection(URL,USERNAME,PASSWORD);
 
             System.out.println("Connected");
             return conn;
         } catch (Exception e) {
             System.out.println(e);
         }
-
 
         return null;
     }

@@ -4,15 +4,15 @@ import java.net.Socket;
 public class UserHandler extends Thread {
 
 
-    UserConnection userConnection=new UserConnection();
+    private UserConnection userConnection=new UserConnection();
 
-    UserListWindow userListWindow=new UserListWindow();
+    private UserListWindow userListWindow=new UserListWindow();
 
-    DatabaseOpeations insertToDatabase=new DatabaseOpeations();
+    private DatabaseOpeations databaseOpeations =new DatabaseOpeations();
 
-    OutputStream os;
+    private OutputStream os;
 
-    String thisUserLogin;
+    private String thisUserLogin;
 
     @Override
     public void run() {
@@ -62,7 +62,7 @@ public class UserHandler extends Thread {
                 s.close();
             }
             userListWindow.updateUsersView(ApplicationState.getInstance().getUsers());
-            userListWindow.updateUsersOnlineView(ApplicationState.getInstance().getUsersOnline());
+            //userListWindow.updateUsersOnlineView(ApplicationState.getInstance().getUsersOnline());
 
         }
     }
@@ -80,12 +80,12 @@ public class UserHandler extends Thread {
             String msg=" added\n";
             msgTerm(msg,login,os);
 
-            insertToDatabase.insertNewUser(login,
-                    insertToDatabase.getPassEncrypting().passEncrypting(password));
+            databaseOpeations.insertNewUser(login,
+                    databaseOpeations.getPassEncrypting().passEncrypting(password));
 
 
         }else{
-            String msg=" exist\n";
+            String msg=" exists\n";
             msgTerm(msg,login,os);
         }
 
@@ -136,7 +136,7 @@ public class UserHandler extends Thread {
             ApplicationState.getInstance().getUserList().remove(userConnection);
             String msg=" removed\n";
             msgTerm(msg,login,os);
-            insertToDatabase.removeUser(login);
+            databaseOpeations.removeUser(login);
         }else{
             String msg=" not exists\n";
             msgTerm(msg,login,os);
@@ -156,7 +156,7 @@ public class UserHandler extends Thread {
         }else{
             String message=" send: "+msg+"\n";
             msgTerm(message,thisUserLogin,os);
-            insertToDatabase.insertMessage(thisUserLogin,sendTo,msg);
+            databaseOpeations.insertMessage(thisUserLogin,sendTo,msg);
         }
 
 

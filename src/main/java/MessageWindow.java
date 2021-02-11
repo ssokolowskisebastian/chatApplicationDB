@@ -17,30 +17,32 @@ public class MessageWindow implements MouseListener {
 
     private JTextField jMessageField;
 
-    private JTextField getjMessageFieldTip;
-
     private JButton jMessageButton;
 
     private JTextArea jMessageArea;
 
     private HashMap<String,String> messageHistory;
 
-    private int WIDTH=400, HEIGHT=400;
+    private static final int WIDTH = 400, HEIGHT = 400;
 
-    private String text="type message here";
+    private static final Color J_MESSAGE_FRAME_COLOR = new Color(1,11,111);
+
+    private static final Color J_MESSAGE_PANEL_COLOR = new Color(111,151,211);
+
+    private String text = "type message here";
 
     public MessageWindow(UserConnection userConnection,String to){
 
-        this.userConnection=userConnection;
+        this.userConnection = userConnection;
 
-        jMessageFrame =new JFrame("message from: "+userConnection.getLogin()+" to " + to);
-        jMessageFrame.setBackground(new Color(1, 11, 111));
+        jMessageFrame = new JFrame("message from: "+userConnection.getLogin()+" to " + to);
+        jMessageFrame.setBackground(J_MESSAGE_FRAME_COLOR);
         jMessageFrame.setSize(WIDTH, HEIGHT);
         jMessageFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         jMessageFrame.setVisible(true);
 
         jMessagePanel=new JPanel();
-        jMessagePanel.setBackground(new Color(111,151,211));
+        jMessagePanel.setBackground(J_MESSAGE_PANEL_COLOR);
         jMessagePanel.setBounds(0, 0, WIDTH, HEIGHT);
         jMessagePanel.setLayout(null);
 
@@ -75,7 +77,6 @@ public class MessageWindow implements MouseListener {
         String message=jMessageField.getText();
         jMessageField.setText("");
         if(!message.equals(text)) {
-            //jMessageArea.setText(userConnection.getLogin() + " " + message);
             messageHistory.put(userConnection.getLogin(), message);
 
             for(Map.Entry<String,String> msgHist: messageHistory.entrySet()){

@@ -2,14 +2,14 @@ import java.util.ArrayList;
 
 public class ApplicationState {
 
+    private ArrayList<UserConnection> userConnections = new ArrayList<>();
 
+    //ArrayList<UserConnection> userConnectionOnline=new ArrayList<>();
 
-    ArrayList<UserConnection> userConnections =new ArrayList<>();
-    ArrayList<UserConnection> userConnectionOnline=new ArrayList<>();
-    ArrayList<UserConnection> userLoginList=new ArrayList<>();
+    private ArrayList<UserConnection> userLoginList = new ArrayList<>();
 
     private static ApplicationState instance;
-    private MessageWindowProvider messageWindowProvider=new MessageWindowProvider();
+    private MessageWindowProvider messageWindowProvider = new MessageWindowProvider();
 
     private ApplicationState() {
     }
@@ -29,14 +29,14 @@ public class ApplicationState {
         return userLoginList;
     }
 
-    public ArrayList<UserConnection> getUsersOnline() {
-        for(UserConnection u:userConnections){
-            if(u.isOnline() && !userConnectionOnline.contains(u)){
-                userConnectionOnline.add(u);
-            }
-        }
-        return userConnectionOnline;
-    }
+//   public ArrayList<UserConnection> getUsersOnline() {
+//        for(UserConnection u:userConnections){
+//            if(u.isOnline() && !userConnectionOnline.contains(u)){
+//                userConnectionOnline.add(u);
+//            }
+//        }
+//        return userConnectionOnline;
+//    }
     public UserConnection getUserLogin(String login) {
         for(UserConnection u: userConnections){
             if(u.getLogin().equals(login)){
